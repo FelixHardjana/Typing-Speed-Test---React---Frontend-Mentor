@@ -1,4 +1,30 @@
 
 body{
   background-color: aquamarine;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  min-height: 100vh;
+  min-width: 100vw;
+
+}
+
+.stats-bar{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.stats-left{
+  color: blue;
+  margin-right: auto;
+}
+
+.stats-right{
+  color: red;
+  margin-left: auto;
 }
