@@ -2,7 +2,7 @@
 import data from '../data.json';
 import iconRestart from '/assets/images/icon-restart.svg';
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 type difficultyType = "easy" | "medium" | "hard";
 
@@ -13,6 +13,9 @@ const MainTyping = () => {
 
     const [difficulty, setDifficulty] = useState<difficultyType>("easy");
     const [restart, setRestart] = useState(randomNum.current);
+    const [timerCountdown, setTimerCountdown] = useState<number>(60);
+
+
 
     const handleDifficulty = (difficultyMode: difficultyType) => {
         setDifficulty(difficultyMode);
@@ -22,6 +25,35 @@ const MainTyping = () => {
         let randNum = Math.floor(Math.random() * 10);
         setRestart(randNum);
     }
+
+    const handleTimer60 = () => {
+        setTimerCountdown(60);
+    }
+    
+    const handlePassageTime = () => {
+        setTimerCountdown(0);
+    }
+
+    // This is 60s timer
+    useEffect(() => { // this is for the 60 second timer countodwn
+      const id = setInterval(() => {
+        if(timerCountdown !== null && timerCountdown > 0){
+            setTimerCountdown(prevTime => prevTime - 1);
+        }
+      }, 1000);  
+
+      return () => clearInterval(id);
+    }, [handleTimer60]);
+
+
+    // This is Passage timer
+    useEffect(() => {
+        const id = setInterval(() => {
+            setTimerCountdown(prevTime => prevTime + 1);
+        }, 1000);
+
+        return () => clearInterval(id);
+    }, [handlePassageTime]);
 
     return(
         <>
@@ -35,7 +67,7 @@ const MainTyping = () => {
                 <div className='stats-left'>
                     <span>WPM:</span>
                     <span>Accuracy:</span>
-                    <span>Time:</span>
+                    <span>Time:{timerCountdown}</span>
                 </div>
                 
 
@@ -47,8 +79,8 @@ const MainTyping = () => {
                     </span>
 
                     <span>Mode:
-                        <button>Timed (60s)</button>
-                        <button>Passage</button>
+                        <button onClick={handleTimer60}>Timed (60s)</button>
+                        <button onClick={handlePassageTime}>Passage</button>
                     </span>
                 </div>
                
