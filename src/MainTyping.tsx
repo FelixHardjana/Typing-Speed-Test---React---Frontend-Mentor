@@ -13,7 +13,9 @@ const MainTyping = () => {
 
     const [difficulty, setDifficulty] = useState<difficultyType>("easy");
     const [restart, setRestart] = useState(randomNum.current);
-    const [timerCountdown, setTimerCountdown] = useState<number>(60);
+
+    const [timerMode, setTimerMode] = useState<string>("");
+    const [timerCountdown, setTimerCountdown] = useState<number>(0);
 
 
 
@@ -27,33 +29,42 @@ const MainTyping = () => {
     }
 
     const handleTimer60 = () => {
-        setTimerCountdown(60);
+        setTimerMode("timer60");
+        setTimerCountdown(10);
     }
     
     const handlePassageTime = () => {
+        setTimerMode("passage");
         setTimerCountdown(0);
     }
+
+    // const timeConverter = () => {
+    //     const minutes = Math.floor(timerCountdown / (1000 * 60) % 60);
+    //     const seconds = Math.floor(timerCountdown / (1000) % 60);
+
+    //     return `${minutes} : ${seconds}`;
+
+    // }
 
     // This is 60s timer
     useEffect(() => { // this is for the 60 second timer countodwn
       const id = setInterval(() => {
-        if(timerCountdown !== null && timerCountdown > 0){
-            setTimerCountdown(prevTime => prevTime - 1);
+        if(timerMode === "timer60"){
+            setTimerCountdown(prevTime => {
+                return prevTime > 0 ? `${0}:${prevTime - 1}` : 0;
+                
+            });
         }
+
+        if(timerMode === "passage"){
+            setTimerCountdown(prevTime => prevTime + 1);
+        }
+    
       }, 1000);  
 
       return () => clearInterval(id);
-    }, [handleTimer60]);
+    }, [timerMode]);
 
-
-    // This is Passage timer
-    useEffect(() => {
-        const id = setInterval(() => {
-            setTimerCountdown(prevTime => prevTime + 1);
-        }, 1000);
-
-        return () => clearInterval(id);
-    }, [handlePassageTime]);
 
     return(
         <>
