@@ -1,6 +1,8 @@
 
 body{
-  background-color: aquamarine;
+  /* background-color: hsl(0, 0%, 7%); */
+  background-color: hsl(0, 0%, 50%);
+  font-family: Sora, sans-serif;
 
   display: flex;
   flex-direction: column;
@@ -8,8 +10,18 @@ body{
   align-items: center;
   
   min-height: 100vh;
-  min-width: 100vw;
+  min-width: 10vw;
 
+}
+
+.main-header{
+  display: flex;
+  padding-bottom: 30px;
+  
+}
+
+.main-header p{
+  margin-left: auto;
 }
 
 .stats-bar{
@@ -20,11 +32,72 @@ body{
 }
 
 .stats-left{
-  color: blue;
+  color: hsl(240, 1%, 59%);
   margin-right: auto;
 }
 
 .stats-right{
-  color: red;
+  color: hsl(240, 1%, 59%);
   margin-left: auto;
+}
+
+.stats-right button{
+  border: 1px solid hsl(240, 1%, 59%);
+  border-radius: 5px; 
+}
+
+.stats-right button:hover{
+  color: hsl(210, 100%, 65%);
+  border: 1px solid hsl(210, 100%, 65%);
+  /*  hsl(214, 100%, 55%) */
+
+}
+
+.stats-right button:focus{
+  outline: 2px solid hsl(210, 100%, 65%);
+  outline-offset: 1px;
+}
+
+
+.stats-right .pressed{
+  color: hsl(214, 100%, 55%);
+  border: 1px solid hsl(214, 100%, 55%);
+}
+
+
+.main-typing-area{
+  color: hsl(240, 1%, 59%);
+}
+
+.restart-container{
+  display: flex;
+  justify-content: center;
+}
+
+.restartButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  background-color: hsl(240, 3%, 46%);
+  font-weight: bold;
+
+  border: none;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+
+.restartButton img{
+  margin-left: 5px;
+  min-width: 10px;
+  height: 12px
+  ;
+}
+
+@font-face {
+  font-family: Sora;
+  src: url(./assets/fonts/Sora/Sora-VariableFont_wght.ttf);
 }

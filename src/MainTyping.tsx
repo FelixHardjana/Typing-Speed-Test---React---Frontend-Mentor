@@ -1,6 +1,7 @@
 
 import data from '../data.json';
 import iconRestart from '/assets/images/icon-restart.svg';
+import trophy from '/assets/images/icon-personal-best.svg';
 
 import { useState, useRef, useEffect } from 'react'
 
@@ -17,10 +18,13 @@ const MainTyping = () => {
     const [timerMode, setTimerMode] = useState<string>("");
     const [timerCountdown, setTimerCountdown] = useState<number>(0);
 
+    const [pressedDifficulty, setPressedDifficulty] = useState<string>("");
+    const [pressedMode, setPressedMode] = useState<string>("");
 
 
     const handleDifficulty = (difficultyMode: difficultyType) => {
         setDifficulty(difficultyMode);
+        setPressedDifficulty(`${difficultyMode}-pressed`);
     }
 
     const handleRestart = () => {
@@ -30,28 +34,30 @@ const MainTyping = () => {
 
     const handleTimer60 = () => {
         setTimerMode("timer60");
-        setTimerCountdown(10);
+        setTimerCountdown(60);
+        setPressedMode(`timer60-pressed`);
     }
     
     const handlePassageTime = () => {
         setTimerMode("passage");
         setTimerCountdown(0);
+        setPressedMode(`passage-pressed`);
     }
 
-    // const timeConverter = () => {
-    //     const minutes = Math.floor(timerCountdown / (1000 * 60) % 60);
-    //     const seconds = Math.floor(timerCountdown / (1000) % 60);
+    const timeConverter = (prevTime: number) => {
+        const minutes = Math.floor(prevTime / 60);
+        const seconds = Math.floor(prevTime % 60);
 
-    //     return `${minutes} : ${seconds}`;
+        return `${minutes}:` + `${seconds}`.padStart(2, "0");
 
-    // }
+    }
 
     // This is 60s timer
     useEffect(() => { // this is for the 60 second timer countodwn
       const id = setInterval(() => {
         if(timerMode === "timer60"){
             setTimerCountdown(prevTime => {
-                return prevTime > 0 ? `${0}:${prevTime - 1}` : 0;
+                return prevTime > 0 ? prevTime - 1 : 0;
                 
             });
         }
@@ -68,8 +74,12 @@ const MainTyping = () => {
 
     return(
         <>
-        <header>
+        <header className='main-header'>
             <img src="../assets/images/logo-large.svg" alt="Typing Speed Logo" />
+            <p>
+                <img src={trophy} alt="trophy-icon" />
+                Personal best: 
+            </p>
         </header>
 
         <main>
@@ -78,20 +88,20 @@ const MainTyping = () => {
                 <div className='stats-left'>
                     <span>WPM:</span>
                     <span>Accuracy:</span>
-                    <span>Time:{timerCountdown}</span>
+                    <span>Time: {timeConverter(timerCountdown)}</span>
                 </div>
                 
 
                 <div className='stats-right'>
                     <span>Difficulty:
-                        <button onClick={() => handleDifficulty("easy")}>Easy</button>
-                        <button onClick={() => handleDifficulty("medium")}>Medium</button>
-                        <button onClick={() => handleDifficulty("hard")}>Hard</button>
+                        <button className={pressedDifficulty === "easy-pressed" ? "pressed" : ""} onClick={() => handleDifficulty("easy")}>Easy</button>
+                        <button className={pressedDifficulty === "medium-pressed" ? "pressed" : ""} onClick={() => handleDifficulty("medium")}>Medium</button>
+                        <button className={pressedDifficulty === "hard-pressed" ? "pressed" : ""} onClick={() => handleDifficulty("hard")}>Hard</button>
                     </span>
 
                     <span>Mode:
-                        <button onClick={handleTimer60}>Timed (60s)</button>
-                        <button onClick={handlePassageTime}>Passage</button>
+                        <button className={pressedMode === "timer60-pressed" ? "pressed" : ""} onClick={handleTimer60}>Timed (60s)</button>
+                        <button className={pressedMode === "passage-pressed" ? "pressed" : ""} onClick={handlePassageTime}>Passage</button>
                     </span>
                 </div>
                
@@ -105,12 +115,14 @@ const MainTyping = () => {
 
             </div>
 
-            <button onClick={handleRestart}>
-                Restart Test 
-                <img src={iconRestart} alt="restart-icon" />
-            </button>
-
             <hr />
+
+            <div className='restart-container'>
+                <button className='restartButton' onClick={handleRestart}>
+                    Restart Test 
+                    <img src={iconRestart} alt="restart-icon" />
+                </button>
+            </div>
 
         </main>
         
