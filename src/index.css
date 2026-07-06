@@ -1,7 +1,7 @@
 
 body{
-  /* background-color: hsl(0, 0%, 7%); */
-  background-color: hsl(0, 0%, 50%);
+  background-color: hsl(0, 0%, 7%);
+  /* background-color: hsl(0, 0%, 50%); */
   font-family: Sora, sans-serif;
 
   display: flex;
@@ -24,6 +24,14 @@ body{
   margin-left: auto;
 }
 
+.main-header span{
+  color: hsl(240, 1%, 59%);
+}
+
+.main-header .personal-best-text{
+  color: white;
+}
+
 .stats-bar{
   display: flex;
   justify-content: center;
@@ -35,6 +43,12 @@ body{
   color: hsl(240, 1%, 59%);
   margin-right: auto;
 }
+
+.stats-left b{
+  color: white;
+}
+
+
 
 .stats-right{
   color: hsl(240, 1%, 59%);

@@ -78,7 +78,7 @@ const MainTyping = () => {
             <img src="../assets/images/logo-large.svg" alt="Typing Speed Logo" />
             <p>
                 <img src={trophy} alt="trophy-icon" />
-                Personal best: 
+                <span>Personal best: <span className='personal-best-text'>92 WPM</span></span> 
             </p>
         </header>
 
@@ -86,9 +86,9 @@ const MainTyping = () => {
             <div className="stats-bar">
                 
                 <div className='stats-left'>
-                    <span>WPM:</span>
-                    <span>Accuracy:</span>
-                    <span>Time: {timeConverter(timerCountdown)}</span>
+                    <span>WPM: <b className='wpm-text'>0</b></span>
+                    <span>Accuracy: <b className='accuracy-text'>100%</b></span>
+                    <span>Time: <b className='time-text'>{timeConverter(timerCountdown)}</b></span>
                 </div>
                 
 
