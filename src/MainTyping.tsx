@@ -21,6 +21,8 @@ const MainTyping = () => {
     const [pressedDifficulty, setPressedDifficulty] = useState<string>("");
     const [pressedMode, setPressedMode] = useState<string>("");
 
+    const [accuracy, setAccuracy] = useState<number>(100);
+
 
     // Selecting Difficulty
     const handleDifficulty = (difficultyMode: difficultyType) => {
@@ -56,6 +58,15 @@ const MainTyping = () => {
         return `${minutes}:` + `${seconds}`.padStart(2, "0");
     }
 
+    const handleAcc = () => {
+        
+    }
+
+    const accuracyConverter = (prevAcc: number) => {
+        
+        return `${prevAcc}%`;
+    }
+
     // Time useEffect
     useEffect(() => { // this is for the 60 second timer countodwn
       const id = setInterval(() => {
@@ -77,19 +88,31 @@ const MainTyping = () => {
 
     // This is for onChange
     const [typed, setTyped] = useState<string>("");
+    const inputRef = useRef<HTMLInputElement>(null);
+
     
     const handleTyped = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         setTyped(e.target.value);
     }
 
+    // This focus on the input element when the page first loads
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
+
+
+   
+
     const typing_check = () => {
 
         const text = data[difficulty][restart].text;
         const textArray = [...text];
         
+        let correctChar = 0;
+        let incorrectChar = 0;
 
-        return(
+        const coloredText = (
             <span>
                 {
                     textArray.map((char, i) => {
@@ -99,35 +122,64 @@ const MainTyping = () => {
 
                         // previous colored in
                         if(i < typed.length){
-                            color = (char === typed[i]) ? "green" : "red";                               
+                            // color = (char === typed[i]) ? "green" : "red";             
+                            if(char == typed[i]){
+                                color = "green";
+                                correctChar++;
+                            }                 
+                            else{
+                                color = "red";
+                                incorrectChar++;
+                            } 
                         }
 
                         // current index highlighted
                         if(i === typed.length){
-                            highlightBlock = "yellow";
+                            highlightBlock = "hsl(240, 3%, 26%)";
 
                         }
+                        
 
-                        return (<>
-                        <span key={i} style={{color: color, backgroundColor: highlightBlock}}>{ char }</span>
-                        </>
+                        return (
+                        <span key={i} style={{color: color, backgroundColor: highlightBlock, borderRadius: "2px"}}>{ char }</span>
                         );
                     })
                 }    
             </span>
-        );
+        )
+        
+        return { coloredText, correctChar, incorrectChar };
         
     }
 
-
-    // const textBlockHighlight = (char: string) => {
-    //     return (
-    //         <span style={{color: "red"}}> {char} </span>
-    //     );
-    // };
+    const { coloredText, correctChar, incorrectChar } = typing_check();
 
 
+    const[correctCount, setCorrectCount] = useState(0);
+    const[incorrectCount, setIncorrectCount] = useState(0);
+    
+    const prevTyped = useRef("");
 
+    useEffect(() => {
+        if(typed.length > prevTyped.current.length){
+            const index = typed.length - 1;
+
+            if(typed[index] === data[difficulty][restart].text[index]){
+                if(correctCount < typed.length){
+                    setCorrectCount(count => count + 1);
+                }
+            }
+            else{
+                if(incorrectCount < typed.length){
+                    setIncorrectCount(count => count + 1);
+                }
+            }
+        }
+
+        prevTyped.current = typed;
+        
+    }, [typed]);
+    
 
 
     return(
@@ -145,8 +197,8 @@ const MainTyping = () => {
                 
                 <div className='stats-left'>
                     <span>WPM: <b className='wpm-text'>0</b></span>
-                    <span>Accuracy: <b className='accuracy-text'>100%</b></span>
-                    <span>Time: <b className='time-text'>{timeConverter(timerCountdown)}</b></span>
+                    <span>Accuracy: <b className='accuracy-text'>{ accuracyConverter(accuracy) }</b></span>
+                    <span>Time: <b className='time-text'>{ timeConverter(timerCountdown) }</b></span>
                 </div>
                 
 
@@ -168,10 +220,11 @@ const MainTyping = () => {
             <hr />
 
             <div className="main-typing-area">
-                {/* <p>{data.easy[randomNum.current].id}</p> */}
-                {/* <p>{data[difficulty][restart].text}</p> */}
-                <p>{ typing_check() }</p>
-                <input value={typed} onChange={(e) => handleTyped(e)} />
+                {/* <p>{data.easy[randomNum.current].id}</p> */}      {/* <p>{data[difficulty][restart].text}</p> */}
+                <p>{ coloredText }</p>
+                <p>Correct: {correctCount}</p>
+                <p>Incorrect: {incorrectCount}</p>
+                <input id="text-input" ref={inputRef} value={typed} onChange={(e) => handleTyped(e)} onBlur={() => inputRef.current?.focus()}/>
                 
 
 
