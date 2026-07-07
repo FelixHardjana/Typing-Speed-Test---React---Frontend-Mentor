@@ -22,54 +22,112 @@ const MainTyping = () => {
     const [pressedMode, setPressedMode] = useState<string>("");
 
 
+    // Selecting Difficulty
     const handleDifficulty = (difficultyMode: difficultyType) => {
         setDifficulty(difficultyMode);
         setPressedDifficulty(`${difficultyMode}-pressed`);
     }
 
+    // Restart Button
     const handleRestart = () => {
         let randNum = Math.floor(Math.random() * 10);
         setRestart(randNum);
     }
 
+    // 60s timer
     const handleTimer60 = () => {
         setTimerMode("timer60");
         setTimerCountdown(60);
         setPressedMode(`timer60-pressed`);
     }
     
+    // Passage timer
     const handlePassageTime = () => {
         setTimerMode("passage");
         setTimerCountdown(0);
         setPressedMode(`passage-pressed`);
     }
 
+    // Timer format
     const timeConverter = (prevTime: number) => {
         const minutes = Math.floor(prevTime / 60);
         const seconds = Math.floor(prevTime % 60);
 
         return `${minutes}:` + `${seconds}`.padStart(2, "0");
-
     }
 
-    // This is 60s timer
+    // Time useEffect
     useEffect(() => { // this is for the 60 second timer countodwn
       const id = setInterval(() => {
-        if(timerMode === "timer60"){
+        if(timerMode === "timer60"){ // 60s timer
             setTimerCountdown(prevTime => {
-                return prevTime > 0 ? prevTime - 1 : 0;
-                
+                return prevTime > 0 ? prevTime - 1 : 0;     
             });
         }
 
-        if(timerMode === "passage"){
+        if(timerMode === "passage"){ // passage timer
             setTimerCountdown(prevTime => prevTime + 1);
         }
-    
       }, 1000);  
 
       return () => clearInterval(id);
     }, [timerMode]);
+
+
+
+    // This is for onChange
+    const [typed, setTyped] = useState<string>("");
+    
+    const handleTyped = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setTyped(e.target.value);
+    }
+
+    const typing_check = () => {
+
+        const text = data[difficulty][restart].text;
+        const textArray = [...text];
+        
+
+        return(
+            <span>
+                {
+                    textArray.map((char, i) => {
+
+                        let color = "hsl(240, 1%, 59%)";
+                        let highlightBlock = " ";
+
+                        // previous colored in
+                        if(i < typed.length){
+                            color = (char === typed[i]) ? "green" : "red";                               
+                        }
+
+                        // current index highlighted
+                        if(i === typed.length){
+                            highlightBlock = "yellow";
+
+                        }
+
+                        return (<>
+                        <span key={i} style={{color: color, backgroundColor: highlightBlock}}>{ char }</span>
+                        </>
+                        );
+                    })
+                }    
+            </span>
+        );
+        
+    }
+
+
+    // const textBlockHighlight = (char: string) => {
+    //     return (
+    //         <span style={{color: "red"}}> {char} </span>
+    //     );
+    // };
+
+
+
 
 
     return(
@@ -111,7 +169,24 @@ const MainTyping = () => {
 
             <div className="main-typing-area">
                 {/* <p>{data.easy[randomNum.current].id}</p> */}
-                <p>{data[difficulty][restart].text}</p>
+                {/* <p>{data[difficulty][restart].text}</p> */}
+                <p>{ typing_check() }</p>
+                <input value={typed} onChange={(e) => handleTyped(e)} />
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             </div>
 
